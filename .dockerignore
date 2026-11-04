@@ -10,5 +10,6 @@
 .idea/
 .env
 TaskManager.Tests/
+frontend/
 docker-compose*.yml
 *.md
