@@ -16,5 +16,24 @@ services:
       timeout: 3s
       retries: 10
 
+  api:
+    build:
+      context: .
+      dockerfile: TaskManager.Api/Dockerfile
+    image: taskmanager-api
+    container_name: taskmanager-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB:-taskmanager};Username=${POSTGRES_USER:-taskmanager};Password=${POSTGRES_PASSWORD:-taskmanager};GSS Encryption Mode=Disable
+      Jwt__Key: ${JWT_KEY:-}
+      Database__MigrateOnStartup: "true"
+      Swagger__Enabled: "true"
+    ports:
+      - "${API_PORT:-8080}:8080"
+    restart: unless-stopped
+
 volumes:
   pgdata:
