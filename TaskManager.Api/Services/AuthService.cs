@@ -22,7 +22,7 @@ public class AuthService(AppDbContext db, ITokenService tokenService, TimeProvid
         {
             Email = email,
             PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(request.Password),
-            CreatedAt = timeProvider.GetUtcNow().UtcDateTime
+            CreatedAt = timeProvider.GetUtcNowTruncatedToMicroseconds()
         };
 
         db.Users.Add(user);

@@ -56,7 +56,7 @@ public class TaskService(AppDbContext db, TimeProvider timeProvider) : ITaskServ
             Title = request.Title,
             Description = request.Description,
             IsDone = false,
-            CreatedAt = timeProvider.GetUtcNow().UtcDateTime,
+            CreatedAt = timeProvider.GetUtcNowTruncatedToMicroseconds(),
             UserId = userId
         };
 
