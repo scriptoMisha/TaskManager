@@ -10,6 +10,7 @@ Content-Type: application/json
 
 ###
 
+# @name login
 POST {{TaskManager.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 
@@ -17,5 +18,53 @@ Content-Type: application/json
   "email": "alice@example.com",
   "password": "Passw0rd!"
 }
+
+###
+
+@token = {{login.response.body.$.accessToken}}
+
+# @name createTask
+POST {{TaskManager.Api_HostAddress}}/api/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Buy milk",
+  "description": "2 liters"
+}
+
+###
+
+@taskId = {{createTask.response.body.$.id}}
+
+GET {{TaskManager.Api_HostAddress}}/api/tasks?status=active&sort=newest&page=1&pageSize=20
+Authorization: Bearer {{token}}
+
+###
+
+GET {{TaskManager.Api_HostAddress}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
+
+###
+
+PUT {{TaskManager.Api_HostAddress}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Buy milk and bread",
+  "description": "2 liters, 1 loaf",
+  "isDone": false
+}
+
+###
+
+PATCH {{TaskManager.Api_HostAddress}}/api/tasks/{{taskId}}/done
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{TaskManager.Api_HostAddress}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
 
 ###
