@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using TaskManager.Api.Auth;
 using TaskManager.Api.Data;
 using TaskManager.Api.Dtos.Auth;
@@ -25,7 +26,15 @@ public class AuthService(AppDbContext db, ITokenService tokenService, TimeProvid
         };
 
         db.Users.Add(user);
-        await db.SaveChangesAsync(cancellationToken);
+
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            return null;
+        }
 
         return new UserResponse(user.Id, user.Email, user.CreatedAt);
     }
