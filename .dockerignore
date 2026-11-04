@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/*.user
+**/appsettings.Development.json
+**/Properties/launchSettings.json
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+.env
+TaskManager.Tests/
+docker-compose*.yml
+*.md
